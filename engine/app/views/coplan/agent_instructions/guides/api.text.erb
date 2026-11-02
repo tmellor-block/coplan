@@ -86,6 +86,17 @@ Include `idempotency_key` (a fresh UUID) for each intended review response. Reus
 
 A review response returns 409 with `code: review_version_changed` for a stale revision. Re-read before responding. A new response to a withdrawn request returns 409 with `code: review_request_withdrawn`; stop responding unless the author requests another look.
 
+## Your principal's own activity
+
+Use these to collect what your principal wrote across all plans, for example for a self-review. Do not walk every plan's comments instead. They only ever return your principal's own activity; you cannot ask for someone else's.
+
+| Method and path | Purpose | Guide |
+|---|---|---|
+| `GET /api/v1/me/comments` | Comments your principal wrote, including ones their agents posted. Each has `id`, `body_markdown`, `author_type`, `agent_name`, `created_at`, a `thread` (`id`, `status`, `anchor_text`, `url`), and a `plan` (`id`, `title`, `url`, `visibility`, `archived`, `created_by_user`). | comments |
+| `GET /api/v1/me/review_responses` | Review decisions your principal recorded. Each has `id`, `decision`, `revision`, `note`, `actor_type`, `agent_name`, `comment_thread_id`, `created_at`, a `review_request` (`id`, `requirement`, `status`), and the same `plan`. | comments |
+
+Both take `since` (inclusive) and `until` (exclusive), each an ISO 8601 date or timestamp, read as UTC when it has no offset. Both take `limit` (default 100, at most 200) and `cursor`. Results are oldest first. The response is `{"comments": [...], "next_cursor": ...}` or `{"review_responses": [...], "next_cursor": ...}`. When `next_cursor` is not null, call again with `cursor` set to it and the same `since` and `until`. A null `next_cursor` means you have everything. Deleted comments are left out. So are plans your principal cannot list, such as someone else's draft, even one they were asked to review. Archived plans stay in, with `archived: true`. A bad date or cursor returns 422.
+
 ## Libraries and folders
 
 | Method and path | Purpose | Guide |

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_185311) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_205701) do
   create_table "active_admin_comments", id: { type: :string, limit: 36 }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "author_id"
     t.string "author_type"
@@ -169,6 +169,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_185311) do
     t.datetime "updated_at", null: false
     t.index ["agent_harness_id"], name: "index_coplan_comments_on_agent_harness_id"
     t.index ["api_token_id"], name: "index_coplan_comments_on_api_token_id"
+    t.index ["author_id", "created_at", "id"], name: "index_coplan_comments_on_author_id_and_created_at_and_id"
     t.index ["comment_thread_id", "created_at"], name: "index_coplan_comments_on_comment_thread_id_and_created_at"
   end
 
@@ -483,6 +484,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_185311) do
     t.index ["comment_thread_id"], name: "fk_rails_ba6743adfa"
     t.index ["plan_version_id"], name: "fk_rails_2feda03aa3"
     t.index ["review_request_id", "created_at"], name: "index_coplan_review_responses_on_request_and_created"
+    t.index ["user_id", "created_at", "id"], name: "index_coplan_review_responses_on_user_id_and_created_at_and_id"
     t.index ["user_id"], name: "fk_rails_8aa5efae11"
   end
 

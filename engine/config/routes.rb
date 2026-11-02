@@ -204,6 +204,13 @@ CoPlan::Engine.routes.draw do
         post "events/ack", to: "agent_events#ack", as: :agent_events_ack
       end
 
+      # The caller's own comments and review decisions across every plan,
+      # by date. Always the caller; there is no way to ask for someone else.
+      scope :me do
+        get "comments", to: "my_activity#comments", as: :my_comments
+        get "review_responses", to: "my_activity#review_responses", as: :my_review_responses
+      end
+
       # Mint a short-lived session token — the one API call that accepts
       # the host's request auth alone, since it is how an agent gets the
       # Bearer token every other call requires. DELETE revokes whichever
